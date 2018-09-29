@@ -1,6 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #define PIN D5
-#define NUM_LEDS 150
+#define NUM_LEDS 16
 
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
