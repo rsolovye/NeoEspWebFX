@@ -24,6 +24,26 @@ WiFiClient Telnet;
 
 const char* ssid = "soyuz";
 const char* password = "89626866191";
+void setPixelHeatColor(byte,int);
+uint32_t Wheel(byte);
+
+void Fire(int, int, int);
+void  RightToLeft(byte, byte,byte, int, int, int);
+void  LeftToRight(byte, byte,byte, int, int, int);
+                    
+void  OutsideToCenter(byte, byte,byte, int, int, int);
+                    
+void  CenterToOutside(byte, byte,byte, int, int, int);
+                    
+void  LeftToRight(byte, byte,byte, int, int, int);
+                    
+void  RightToLeft(byte, byte,byte, int, int, int);
+                    
+void  OutsideToCenter(byte, byte,byte, int, int, int);
+                    
+void  CenterToOutside(byte, byte,byte, int, int, int);
+                    
+
 
 void setup() {
   Serial.begin(115200);
@@ -483,41 +503,54 @@ void colorWipe(byte red, byte green, byte blue, int SpeedDelay) {
   }
 }
 
-void rainbowCycle(int SpeedDelay) {
-  byte *c;
-  uint16_t i, j;
+//void rainbowCycle(int SpeedDelay) {
+ // byte *c;
+ // uint16_t i, j;
 
-  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
-    for(i=0; i< NUM_LEDS; i++) {
-      c=Wheel(((i * 256 / NUM_LEDS) + j) & 255);
-      setPixel(i, *c, *(c+1), *(c+2));
-    }
-    showStrip();
-    delay(SpeedDelay);
-  }
-}
-
-byte * Wheel(byte WheelPos) {
-  static byte c[3];
-  
+ // for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+  //  for(i=0; i< NUM_LEDS; i++) {
+  //   c=Wheel(((i * 256 / NUM_LEDS) + j) & 255);
+  //    setPixel(i, *c, *(c+1), *(c+2));
+  //  }
+  //  showStrip();
+  //  delay(SpeedDelay);
+ // }
+//}
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+uint32_t Wheel(byte WheelPos) {
+  WheelPos = 255 - WheelPos;
   if(WheelPos < 85) {
-   c[0]=WheelPos * 3;
-   c[1]=255 - WheelPos * 3;
-   c[2]=0;
+   return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
   } else if(WheelPos < 170) {
-   WheelPos -= 85;
-   c[0]=255 - WheelPos * 3;
-   c[1]=0;
-   c[2]=WheelPos * 3;
+    WheelPos -= 85;
+   return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
   } else {
    WheelPos -= 170;
-   c[0]=0;
-   c[1]=WheelPos * 3;
-   c[2]=255 - WheelPos * 3;
+   return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
   }
-
-  return c;
 }
+//byte* Wheel(byte WheelPos) {
+//  static byte c[3];
+//  
+//  if(WheelPos < 85) {
+//   c[0]=WheelPos * 3;
+//   c[1]=255 - WheelPos * 3;
+//   c[2]=0;
+ // } else if(WheelPos < 170) {
+ //  WheelPos -= 85;
+  // c[0]=255 - WheelPos * 3;
+  // c[1]=0;
+  // c[2]=WheelPos * 3;
+  //} else {
+  // WheelPos -= 170;
+  // c[0]=0;
+  // c[1]=WheelPos * 3;
+  // c[2]=255 - WheelPos * 3;
+  //}
+
+ // return c;
+//}
 
 void theaterChase(byte red, byte green, byte blue, int SpeedDelay) {
   for (int j=0; j<10; j++) {  //do 10 cycles of chasing
@@ -536,25 +569,25 @@ void theaterChase(byte red, byte green, byte blue, int SpeedDelay) {
   }
 }
 
-void theaterChaseRainbow(int SpeedDelay) {
-  byte *c;
+//void theaterChaseRainbow(int SpeedDelay) {
+ // byte *c;
   
-  for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
-    for (int q=0; q < 3; q++) {
-        for (int i=0; i < NUM_LEDS; i=i+3) {
-          c = Wheel( (i+j) % 255);
-          setPixel(i+q, *c, *(c+1), *(c+2));    //turn every third pixel on
-        }
-        showStrip();
+ // for (int j=0; j < 256; j++) {     // cycle all 256 colors in the wheel
+  //  for (int q=0; q < 3; q++) {
+   //     for (int i=0; i < NUM_LEDS; i=i+3) {
+    //      c = Wheel( (i+j) % 255);
+     //     setPixel(i+q, *c, *(c+1), *(c+2));    //turn every third pixel on
+      //  }
+       // showStrip();
        
-        delay(SpeedDelay);
+      //  delay(SpeedDelay);
        
-        for (int i=0; i < NUM_LEDS; i=i+3) {
-          setPixel(i+q, 0,0,0);        //turn every third pixel off
-        }
-    }
-  }
-}
+      //  for (int i=0; i < NUM_LEDS; i=i+3) {
+       //   setPixel(i+q, 0,0,0);        //turn every third pixel off
+        //}
+   // }
+ // }
+//}
 
 void Fire(int Cooling, int Sparking, int SpeedDelay) {
   static byte heat[NUM_LEDS];
